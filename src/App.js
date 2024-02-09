@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import './App.css';
 
 const quotes = [{quote:'Wisdom, when spoken aloud, always sounds a little foolish. Perhaps that\'s because when we hear something that makes sense to us, we think we already know it. But often we don\'t.',
@@ -12,59 +12,43 @@ author: 'John D. Rockafeller'},
 {quote:'Success comes from keeping the ears open and the mouth closed.',
 author: 'John D. Rockafeller'}]
 
-class NewQuote extends React.Component{
-  constructor(props){
-    super(props);
-    this.state={
-      counter:0,
-    }
-    this.handleCounter=this.handleCounter.bind(this);
-  }
-  
-  handleCounter(event){
-    this.setState((state)=>({
-      counter:Math.floor(Math.random()*5)
-    }));
-  }
-  
-  render(){
-	let quote = quotes[this.state.counter].quote;
-	let author = quotes[this.state.counter].author;
-    return (
+function NewQuote(){
+	const [counter, setCounter] = useState(0);
+	const handleCounter = (event) => {
+		setCounter(Math.floor(Math.random()*5));
+	}
+	let quote = quotes[counter].quote;
+	let author = quotes[counter].author;
+	return (
       <div id='quote-box' className='quoteCard'>
         <QuoteCard quote={quote} author={author} />
-        <NewQuoteButton id='new-quote' handleCounter={this.handleCounter} />
+        <NewQuoteButton id='new-quote' handleCounter={handleCounter} />
 		<Tweet quote={quote} author={author} />
       </div>
-    );
-  }
+    ); 
 }
 
-class NewQuoteButton extends React.Component{
-  render(){
+function NewQuoteButton({id, handleCounter}){
     return (
       <div>
-        <button className='button' id={this.props.id} onClick={this.props.handleCounter}>New Quote</button>
+        <button className='button' id={id} onClick={handleCounter}>New Quote</button>
       </div>
     );
-  }
 }
 
-class QuoteCard extends React.Component{
-	render(){
-		return <>
-			<p id='text'><i>{this.props.quote}</i></p>
-			<p id='author'>{'-' + this.props.author}</p>		
+function QuoteCard({quote, author}){
+	return <>
+			<p id='text'><i>{quote}</i></p>
+			<p id='author'>{'-' + author}</p>		
 		</>
-	}
 }
 
-class Tweet extends React.Component{
-	render(){
-		return <div className='tweet'>
-			<a id='tweet-quote' href={'https://twitter.com/intent/tweet?text='+ this.props.quote+'%0A -'+this.props.author}><i>Tweet</i></a>
+function Tweet({quote, author}){
+	return (
+		<div className='tweet'>
+			<a id='tweet-quote' href={'https://twitter.com/intent/tweet?text='+ quote+'%0A -'+author}><i>Tweet</i></a>
 		</div>
-	}
+	);
 }
 
 export default NewQuote;
